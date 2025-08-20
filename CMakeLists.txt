@@ -22,3 +22,7 @@ target_include_directories(Graphics_Engine PRIVATE
 target_link_libraries(Graphics_Engine PRIVATE
     glfw
 )
+
+target_compile_definitions(Graphics_Engine PRIVATE
+    ROOT_DIR="${CMAKE_CURRENT_SOURCE_DIR}/"
+)
