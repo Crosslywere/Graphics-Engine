@@ -8,12 +8,15 @@ add_executable(Graphics_Engine
     Vendor/glad/src/glad.c
     Source/Main.cpp
     Source/Shader.cpp
+    Source/stb_implementation.c
+    Source/Texture.cpp
 )
 
 target_include_directories(Graphics_Engine PRIVATE
     Vendor/glad/include
     Vendor/glfw/include
     Headers
+    Vendor/stb
 )
 
 target_link_libraries(Graphics_Engine PRIVATE
