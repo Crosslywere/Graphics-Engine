@@ -42,30 +42,8 @@ int main() {
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * sizeof(float), (const void*)(2 * sizeof(float)));
         glEnableVertexAttribArray(1);
-        Shader shader = Shader(
-            R"(
-            #version 330 core
-            layout (location = 0) in vec2 aPos;
-            layout (location = 1) in vec2 texCoord;
-            varying vec2 uv;
-            void main() {
-                uv = texCoord;
-                gl_Position = vec4(aPos, 0.0, 1.0);
-            }
-            )",
-            R"(
-            #version 330 core
-            uniform vec3 color;
-            uniform sampler2D wall;
-            varying vec2 uv;
-            void main() {
-                vec3 w = texture2D(wall, uv).rgb;
-                gl_FragColor = vec4(abs(color) * w, 1.0);
-            }
-            )"
-        );
+        Shader shader = Shader("Resource/shaders/vertex.glsl", "Resource/shaders/fragment.glsl", AS_FILE);
         shader.use();
-        shader.setFloat3("color", 1, .5f, .25f);
         Texture texture = Texture("Resource/wall.jpg");
         shader.setTexture("wall", texture.bind());
         float r, g, b;

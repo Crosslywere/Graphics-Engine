@@ -1,6 +1,8 @@
 #include <Shader.h>
 #include <glad/glad.h>
 #include <iostream>
+#include <sstream>
+#include <fstream>
 
 #define INFO_LOG_MAX_BUFFER 1024
 
@@ -14,21 +16,28 @@ void validateShaderCompilation(unsigned int shader) {
     }
 }
 
-unsigned int compileShaderSource(const std::string& source, int type) {
+unsigned int compileShaderSource(const std::string& sourceStr, int type) {
     unsigned int shader = glCreateShader(type);
-    const char* sourceData = source.c_str();
-    glShaderSource(shader, 1, &sourceData, NULL);
+    const char* sourceBytes = sourceStr.c_str();
+    glShaderSource(shader, 1, &sourceBytes, NULL);
     glCompileShader(shader);
     validateShaderCompilation(shader);
     return shader;
+}
+
+unsigned int compileShaderFile(const std::string& filepath, int type) {
+    std::stringstream ss;
+    std::ifstream file(ROOT_DIR + filepath);
+    ss << file.rdbuf();
+    return compileShaderSource(ss.str(), type);
 }
 
 Shader::Shader(const std::string& vertex, const std::string& fragment, ShaderInputType type) {
     unsigned int vs, fs;
     switch (type) {
         case AS_FILE: {
-                std::cerr << "File loading has not been implemented!" << std::endl;
-                exit(EXIT_FAILURE);
+                vs = compileShaderFile(vertex, GL_VERTEX_SHADER);
+                fs = compileShaderFile(fragment, GL_FRAGMENT_SHADER);
                 break;
             }
         case AS_SPIRV_FILE: {
