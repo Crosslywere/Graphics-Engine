@@ -17,6 +17,7 @@ target_include_directories(Graphics_Engine PRIVATE
     Vendor/glfw/include
     Headers
     Vendor/stb
+    Vendor/glm
 )
 
 target_link_libraries(Graphics_Engine PRIVATE
