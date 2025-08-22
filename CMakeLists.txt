@@ -11,6 +11,7 @@ add_executable(Graphics_Engine
     Source/stb_implementation.c
     Source/Texture.cpp
     Source/Camera.cpp
+    Source/Window.cpp
 )
 
 target_include_directories(Graphics_Engine PRIVATE
