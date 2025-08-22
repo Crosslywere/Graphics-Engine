@@ -6,26 +6,10 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include <Camera.h>
+#include <Window.h>
 
 int main() {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Grphics Engine", NULL, NULL);
-    if (!window) {
-        glfwTerminate();
-        std::cerr << "Failed to create window!" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    glfwMakeContextCurrent(window);
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        glfwDestroyWindow(window);
-        glfwTerminate();
-        std::cerr << "Failed to load OpenGL functions" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    glfwSwapInterval(1);
+    Window window = Window(800, 600, "Graphics Engine");
     // Scoped for cleanup - once the window context is destroyed, opengl calls will fail!
     {
         // Rectangle setup
@@ -52,15 +36,21 @@ int main() {
         glGenBuffers(1, &ebo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+        // Creating the shader
         Shader shader = Shader("Resource/shaders/vertex.glsl", "Resource/shaders/fragment.glsl", AS_FILE);
         shader.use();
+
+        // Setting up the camera
         Camera camera = Camera({0, 0, -1});
-        shader.setMat4("projection", camera.getProjection(4, 3));
+        shader.setMat4("projection", camera.getProjection(window.getWidth(), window.getHeight()));
         shader.setMat4("view", camera.getView());
+
+        // Setting up the texture
         Texture texture = Texture("Resource/wall.jpg");
         shader.setTexture("wall", texture.bind());
         float r, g, b;
-        while (!glfwWindowShouldClose(window)) {
+        while (window.isOpen()) {
             glClear(GL_COLOR_BUFFER_BIT);
             r = sin(glfwGetTime() + M_PI * M_PI);
             g = sin(glfwGetTime());
@@ -68,12 +58,8 @@ int main() {
             shader.setMat4("model", glm::rotate(glm::mat4(1.f), (float) glfwGetTime(), glm::vec3(0, 0, 1)));
             shader.setFloat3("color", r, g, b);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
-            glfwSwapBuffers(window);
-            glfwPollEvents();
         }
         glDeleteBuffers(1, &vbo);
         glDeleteVertexArrays(1, &vao);
     }
-    glfwDestroyWindow(window);
-    glfwTerminate();
 }
