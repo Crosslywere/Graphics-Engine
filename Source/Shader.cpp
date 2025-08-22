@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <glm/gtc/type_ptr.hpp>
 
 #define INFO_LOG_MAX_BUFFER 1024
 
@@ -69,6 +70,10 @@ void Shader::setFloat3(const std::string& uniform, float x, float y, float z) {
 
 void Shader::setTexture(const std::string& uniform, unsigned int index) {
     glUniform1i(getUniformLocation(uniform), index);
+}
+
+void Shader::setMat4(const std::string &uniform, const glm::mat4 &mat) {
+    glUniformMatrix4fv(getUniformLocation(uniform), 1, false, glm::value_ptr(mat));
 }
 
 int Shader::getUniformLocation(const std::string& name) {
