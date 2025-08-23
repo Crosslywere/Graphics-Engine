@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <Window.h>
 #include <iostream>
+#include <Input.h>
 
 Window::Window(int width, int height, const std::string& title, bool resizable, bool vsync)
     : m_width(width), m_height(height), m_title(title), m_resizable(resizable), m_vsync(vsync) {
@@ -23,6 +24,23 @@ Window::Window(int width, int height, const std::string& title, bool resizable, 
         exit(EXIT_FAILURE);
     }
     glfwSwapInterval(m_vsync);
+    glfwSetWindowSizeLimits(m_handle, 800, 600, GLFW_DONT_CARE, GLFW_DONT_CARE);
+    glfwSetWindowUserPointer(m_handle, this);
+    glfwSetFramebufferSizeCallback(m_handle, [](GLFWwindow* window, int width, int height) {
+        auto& windowReference = *(Window*)glfwGetWindowUserPointer(window);
+        windowReference.m_width = width;
+        windowReference.m_height = height;
+        glViewport(0, 0, width, height);
+    });
+    glfwSetKeyCallback(m_handle, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+        Input::getInstance().setKey(key, action);
+    });
+    glfwSetMouseButtonCallback(m_handle, [](GLFWwindow* window, int button, int scancode, int action) {
+        Input::getInstance().setMouseButton(button, action);
+    });
+    glfwSetCursorPosCallback(m_handle, [](GLFWwindow* window, double xpos, double ypos) {
+        Input::getInstance().setMousePos(xpos, ypos);
+    });
 }
 
 Window::~Window() {
@@ -31,6 +49,7 @@ Window::~Window() {
 }
 
 bool Window::isOpen() const {
+    Input::getInstance().update();
     glfwSwapBuffers(m_handle);
     glfwPollEvents();
     return !glfwWindowShouldClose(m_handle);
