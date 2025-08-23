@@ -14,6 +14,7 @@ public:
     void setTitle(const std::string& title);
     bool isVsync() const;
     void setVsync(bool vsync);
+    void quit();
 private:
     int m_width, m_height;
     bool m_vsync, m_resizable;

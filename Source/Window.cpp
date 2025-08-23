@@ -79,3 +79,7 @@ bool Window::isVsync() const {
 void Window::setVsync(bool vsync) {
     glfwSwapInterval(m_vsync = vsync);
 }
+
+void Window::quit() {
+    glfwSetWindowShouldClose(m_handle, true);
+}
