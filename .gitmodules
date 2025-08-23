@@ -7,3 +7,6 @@
 [submodule "Vendor/glm"]
 	path = Vendor/glm
 	url = https://github.com/icaven/glm
+[submodule "Vendor/assimp"]
+	path = Vendor/assimp
+	url = https://github.com/assimp/assimp
