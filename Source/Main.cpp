@@ -9,6 +9,18 @@
 #include <Window.h>
 #include <Input.h>
 
+void processInputs(Window& window) {
+    static auto& input = Input::getInstance();
+    if (input.isKeyJustPressed(GLFW_KEY_ESCAPE))
+        window.quit();
+    if (input.isButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+        auto rg = input.getMousePosition();
+        glClearColor(rg.r / window.getWidth(), rg.g / window.getHeight(), .5, 1);
+    } else {
+        glClearColor(0, 0, 0, 1);
+    }
+}
+
 int main() {
     Window window = Window(800, 600, "Graphics Engine", true);
     // Scoped for cleanup - once the window context is destroyed, opengl calls will fail!
@@ -52,9 +64,10 @@ int main() {
         shader.setTexture("wall", texture.bind());
         float r, g, b;
         while (window.isOpen()) {
+            processInputs(window);
             glClear(GL_COLOR_BUFFER_BIT);
             shader.setMat4("projection", camera.getProjection(window.getWidth(), window.getHeight()));
-            if (Input::getInstance().isKeyPressed(GLFW_KEY_SPACE))
+            if (!Input::getInstance().isKeyPressed(' '))
                 shader.setMat4("model", glm::rotate(glm::mat4(1.f), (float)glfwGetTime(), glm::vec3(0, 0, 1)));
             r = sin(glfwGetTime() + M_PI * M_PI);
             g = sin(glfwGetTime());
