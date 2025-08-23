@@ -39,6 +39,7 @@ const glm::vec2 &Input::getMousePosition() const {
 
 void Input::update() {
     m_prevKeyset = m_keyset;
+    m_prevButtonset = m_buttonset;
 }
 
 void Input::setKey(int key, bool pressed) {
