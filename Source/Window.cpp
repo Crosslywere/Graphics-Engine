@@ -35,7 +35,7 @@ Window::Window(int width, int height, const std::string& title, bool resizable, 
     glfwSetKeyCallback(m_handle, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
         Input::getInstance().setKey(key, action);
     });
-    glfwSetMouseButtonCallback(m_handle, [](GLFWwindow* window, int button, int scancode, int action) {
+    glfwSetMouseButtonCallback(m_handle, [](GLFWwindow* window, int button, int action, int mods) {
         Input::getInstance().setMouseButton(button, action);
     });
     glfwSetCursorPosCallback(m_handle, [](GLFWwindow* window, double xpos, double ypos) {
