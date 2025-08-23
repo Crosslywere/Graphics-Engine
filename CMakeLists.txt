@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(Graphics_Engine VERSION 1.0)
 
 add_subdirectory(Vendor/glfw)
+add_subdirectory(Vendor/assimp)
 
 add_executable(Graphics_Engine
     Vendor/glad/src/glad.c
@@ -20,10 +21,12 @@ target_include_directories(Graphics_Engine PRIVATE
     Headers
     Vendor/stb
     Vendor/glm
+    Vendor/assimp/include
 )
 
 target_link_libraries(Graphics_Engine PRIVATE
     glfw
+    assimp
 )
 
 target_compile_definitions(Graphics_Engine PRIVATE
