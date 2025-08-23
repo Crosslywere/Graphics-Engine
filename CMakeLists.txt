@@ -13,6 +13,7 @@ add_executable(Graphics_Engine
     Source/Texture.cpp
     Source/Camera.cpp
     Source/Window.cpp
+    Source/Input.cpp
 )
 
 target_include_directories(Graphics_Engine PRIVATE
