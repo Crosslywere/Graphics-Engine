@@ -15,7 +15,7 @@ public:
     bool isButtonPressed(int button) const;
     bool isButtonJustPressed(int button) const;
     bool isButtonJustReleased(int button) const;
-    const glm::vec2& getMousePosition() const; 
+    const glm::vec2& getMousePosition() const;
 private:
     Input();
     void update();
@@ -25,7 +25,8 @@ private:
 private:
     std::unordered_set<int> m_keyset{};
     std::unordered_set<int> m_prevKeyset{};
-    std::unordered_set<int> m_bottonset{};
+    std::unordered_set<int> m_buttonset{};
+    std::unordered_set<int> m_prevButtonset{};
     glm::vec2 m_mousePos{};
 
 };

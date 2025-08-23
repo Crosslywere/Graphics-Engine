@@ -10,15 +10,27 @@ Input& Input::getInstance() {
 }
 
 bool Input::isKeyPressed(int key) const {
-    return m_keyset.find(key) != m_keyset.end() || m_prevKeyset.find(key) != m_prevKeyset.end();
+    return m_keyset.find(key) != m_keyset.end();
 }
 
 bool Input::isKeyJustPressed(int key) const {
     return m_keyset.find(key) != m_keyset.end() && m_prevKeyset.find(key) == m_prevKeyset.end();
 }
 
+bool Input::isKeyJustReleased(int key) const {
+    return m_keyset.find(key) == m_keyset.end() && m_prevKeyset.find(key) != m_prevKeyset.end();
+}
+
 bool Input::isButtonPressed(int button) const {
-    return m_bottonset.find(button) != m_bottonset.end();
+    return m_buttonset.find(button) != m_buttonset.end();
+}
+
+bool Input::isButtonJustPressed(int button) const {
+    return m_buttonset.find(button) != m_buttonset.end() && m_prevButtonset.find(button) == m_prevButtonset.end();
+}
+
+bool Input::isButtonJustReleased(int button) const {
+    return m_buttonset.find(button) == m_buttonset.end() && m_prevButtonset.find(button) != m_prevButtonset.end();
 }
 
 const glm::vec2 &Input::getMousePosition() const {
@@ -38,9 +50,9 @@ void Input::setKey(int key, bool pressed) {
 
 void Input::setMouseButton(int button, bool pressed) {
     if (pressed)
-        m_bottonset.emplace(button);
+        m_buttonset.emplace(button);
     else
-        m_bottonset.erase(button);
+        m_buttonset.erase(button);
 }
 
 void Input::setMousePos(float xpos, float ypos) {
