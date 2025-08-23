@@ -7,9 +7,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <Camera.h>
 #include <Window.h>
+#include <Input.h>
 
 int main() {
-    Window window = Window(800, 600, "Graphics Engine");
+    Window window = Window(800, 600, "Graphics Engine", true);
     // Scoped for cleanup - once the window context is destroyed, opengl calls will fail!
     {
         // Rectangle setup
@@ -43,8 +44,8 @@ int main() {
 
         // Setting up the camera
         Camera camera = Camera({0, 0, -1});
-        shader.setMat4("projection", camera.getProjection(window.getWidth(), window.getHeight()));
         shader.setMat4("view", camera.getView());
+        shader.setMat4("model", glm::mat4(1));
 
         // Setting up the texture
         Texture texture = Texture("Resource/wall.jpg");
@@ -52,10 +53,12 @@ int main() {
         float r, g, b;
         while (window.isOpen()) {
             glClear(GL_COLOR_BUFFER_BIT);
+            shader.setMat4("projection", camera.getProjection(window.getWidth(), window.getHeight()));
+            if (Input::getInstance().isKeyPressed(GLFW_KEY_SPACE))
+                shader.setMat4("model", glm::rotate(glm::mat4(1.f), (float)glfwGetTime(), glm::vec3(0, 0, 1)));
             r = sin(glfwGetTime() + M_PI * M_PI);
             g = sin(glfwGetTime());
             b = sin(glfwGetTime() * 2);
-            shader.setMat4("model", glm::rotate(glm::mat4(1.f), (float) glfwGetTime(), glm::vec3(0, 0, 1)));
             shader.setFloat3("color", r, g, b);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
         }
