@@ -8,6 +8,7 @@
 #include <Camera.h>
 #include <Window.h>
 #include <Input.h>
+#include <Mesh.h>
 
 void processInputs(Window& window) {
     static auto& input = Input::getInstance();
@@ -15,7 +16,7 @@ void processInputs(Window& window) {
         window.quit();
     if (input.isButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
         auto rg = input.getMousePosition();
-        glClearColor(rg.r / window.getWidth(), rg.g / window.getHeight(), .5, 1);
+        glClearColor(rg.r / window.getWidth(), rg.g / window.getHeight(), sin(glfwGetTime()) * .5 + .5, 1);
     } else {
         glClearColor(0, 0, 0, 1);
     }
@@ -26,30 +27,23 @@ int main() {
     // Scoped for cleanup - once the window context is destroyed, opengl calls will fail!
     {
         // Rectangle setup
-        float vertices[] = {
-            -.5f, 0.5f, 0.f, 1.f,
-            -.5f, -.5f, 0.f, 0.f,
-            0.5f, -.5f, 1.f, 0.f,
-            0.5f, 0.5f, 1.f, 1.f,
-        };
         unsigned int indices[] = {
             0, 1, 2,
             2, 3, 0,
         };
-        unsigned int vao, vbo, ebo;
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
-        glGenBuffers(1, &vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * sizeof(float), 0);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * sizeof(float), (const void*)(2 * sizeof(float)));
-        glEnableVertexAttribArray(1);
-        glGenBuffers(1, &ebo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
+        Mesh rectangle = Mesh(indices, 6,
+            {{2, {
+                -.5f, 0.5f,
+                -.5f, -.5f,
+                0.5f, -.5f,
+                0.5f, 0.5f,
+            }}, {2, {
+                0.f, 1.f,
+                0.f, 0.f,
+                1.f, 0.f,
+                1.f, 1.f, 
+            }}}
+        );
         // Creating the shader
         Shader shader = Shader("Resource/shaders/vertex.glsl", "Resource/shaders/fragment.glsl", AS_FILE);
         shader.use();
@@ -73,9 +67,7 @@ int main() {
             g = sin(glfwGetTime());
             b = sin(glfwGetTime() * 2);
             shader.setFloat3("color", r, g, b);
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+            rectangle.draw();
         }
-        glDeleteBuffers(1, &vbo);
-        glDeleteVertexArrays(1, &vao);
     }
 }
