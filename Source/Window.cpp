@@ -50,6 +50,7 @@ Window::~Window() {
 
 bool Window::isOpen() const {
     Input::getInstance().update();
+    Timer::getInstance().update();
     glfwSwapBuffers(m_handle);
     glfwPollEvents();
     return !glfwWindowShouldClose(m_handle);
