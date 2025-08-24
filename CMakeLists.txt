@@ -14,6 +14,7 @@ add_executable(Graphics_Engine
     Source/Camera.cpp
     Source/Window.cpp
     Source/Input.cpp
+    Source/Mesh.cpp
 )
 
 target_include_directories(Graphics_Engine PRIVATE
