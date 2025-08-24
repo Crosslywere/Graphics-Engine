@@ -2,6 +2,7 @@
 #include <Window.h>
 #include <iostream>
 #include <Input.h>
+#include <Timer.h>
 
 Window::Window(int width, int height, const std::string& title, bool resizable, bool vsync)
     : m_width(width), m_height(height), m_title(title), m_resizable(resizable), m_vsync(vsync) {
