@@ -9,9 +9,12 @@
 #include <Window.h>
 #include <Input.h>
 #include <Mesh.h>
+#include <Timer.h>
+
+static inline Camera g_Camera = Camera({0, 0, -1});
 
 void processInputs(Window& window) {
-    static auto& input = Input::getInstance();
+    static const auto& input = Input::getInstance();
     if (input.isKeyJustPressed(GLFW_KEY_ESCAPE))
         window.quit();
     if (input.isButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
@@ -27,11 +30,7 @@ int main() {
     // Scoped for cleanup - once the window context is destroyed, opengl calls will fail!
     {
         // Rectangle setup
-        unsigned int indices[] = {
-            0, 1, 2,
-            2, 3, 0,
-        };
-        Mesh rectangle = Mesh(indices, 6,
+        Mesh rectangle = Mesh(
             {{2, {
                 -.5f, 0.5f,
                 -.5f, -.5f,
@@ -42,7 +41,8 @@ int main() {
                 0.f, 0.f,
                 1.f, 0.f,
                 1.f, 1.f, 
-            }}}
+            }}},
+            {0, 1, 2, 2, 3, 0}
         );
         // Creating the shader
         Shader shader = Shader("Resource/shaders/vertex.glsl", "Resource/shaders/fragment.glsl", AS_FILE);
@@ -51,18 +51,17 @@ int main() {
         // Setting up the texture
         Texture texture = Texture("Resource/wall.jpg");
         shader.setTexture("wall", texture.bind());
-        float r, g, b;
+        glm::vec3 color;
         while (window.isOpen()) {
+            const auto time = Timer::getInstance().getTotalTime();
             processInputs(window);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             shader.setMat4("projection", g_Camera.getProjection(window.getWidth(), window.getHeight()));
             shader.setMat4("view", g_Camera.getView());
             if (!Input::getInstance().isKeyPressed(' '))
                 shader.setMat4("model", glm::rotate(glm::mat4(1.f), (float)glfwGetTime(), glm::vec3(0, 0, 1)));
-            r = sin(glfwGetTime() + M_PI * M_PI);
-            g = sin(glfwGetTime());
-            b = sin(glfwGetTime() * 2);
-            shader.setFloat3("color", r, g, b);
+            color = glm::vec3(sin(-time), sin(time), cos(time));
+            shader.setFloat3("color", color.r, color.g, color.b);
             rectangle.draw();
         }
     }
