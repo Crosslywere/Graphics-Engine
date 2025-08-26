@@ -15,6 +15,9 @@ public:
     bool isVsync() const;
     void setVsync(bool vsync);
     void quit();
+
+    void disableMouse();
+    void normalMouse();
 private:
     int m_width, m_height;
     bool m_vsync, m_resizable;

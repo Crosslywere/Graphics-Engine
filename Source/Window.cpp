@@ -25,6 +25,10 @@ Window::Window(int width, int height, const std::string& title, bool resizable, 
         exit(EXIT_FAILURE);
     }
     glfwSwapInterval(m_vsync);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
     glfwSetWindowSizeLimits(m_handle, 800, 600, GLFW_DONT_CARE, GLFW_DONT_CARE);
     glfwSetWindowUserPointer(m_handle, this);
     glfwSetFramebufferSizeCallback(m_handle, [](GLFWwindow* window, int width, int height) {
@@ -84,4 +88,12 @@ void Window::setVsync(bool vsync) {
 
 void Window::quit() {
     glfwSetWindowShouldClose(m_handle, true);
+}
+
+void Window::disableMouse() {
+    glfwSetInputMode(m_handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void Window::normalMouse() {
+    glfwSetInputMode(m_handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }

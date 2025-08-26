@@ -18,9 +18,11 @@ void processInputs(Window& window) {
     if (input.isKeyJustPressed(GLFW_KEY_ESCAPE))
         window.quit();
     if (input.isButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+        window.disableMouse();
         auto rg = input.getMousePosition();
         glClearColor(rg.r / window.getWidth(), rg.g / window.getHeight(), sin(glfwGetTime()) * .5 + .5, 1);
     } else {
+        window.normalMouse();
         glClearColor(0, 0, 0, 1);
     }
 }
