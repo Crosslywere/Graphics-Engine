@@ -25,55 +25,46 @@ void Mesh::AttributeBuilder::build() const {
     }
 }
 
-Mesh::Mesh(const unsigned int* const indices, int icount, const float* const vertices, int vcount, const AttributeBuilder& attribBuilder)
-        : m_count(icount) {
+Mesh::Mesh(const std::vector<float> &attributes, const std::vector<unsigned int> &indices, const AttributeBuilder &attributeBuilder) 
+        : m_count(indices.size()) {
     glGenVertexArrays(1, &m_VAO);
     glBindVertexArray(m_VAO);
-    m_buffers = new unsigned int[2];
-    glGenBuffers(m_numBuffers = 2, m_buffers);
-    glBindBuffer(GL_ARRAY_BUFFER, m_buffers[0]);
-    glBufferData(GL_ARRAY_BUFFER, vcount * sizeof(float), vertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_buffers[1]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, icount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
-    attribBuilder.build();
-}
-
-Mesh::Mesh(const unsigned int *const indices, int icount, const std::initializer_list<SizeDataPair> &dataPairs)
-        : m_count(icount), m_numBuffers(dataPairs.size() + 1) {
-    glGenVertexArrays(1, &m_VAO);
-    glBindVertexArray(m_VAO);
-    m_buffers = new unsigned int[m_numBuffers];
-    glGenBuffers(dataPairs.size() + 1, m_buffers);
-    for (int i = 0; i < dataPairs.size(); i++) {
-        glBindBuffer(GL_ARRAY_BUFFER, m_buffers[i]);
-        glBufferData(GL_ARRAY_BUFFER, dataPairs.begin()[i].second.size() * sizeof(float), dataPairs.begin()[i].second.data(), GL_STATIC_DRAW);
-        glVertexAttribPointer(i, dataPairs.begin()[i].first, GL_FLOAT, false, 0, 0);
-        glEnableVertexAttribArray(i);
-    }
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_buffers[dataPairs.size()]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, icount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
-}
-
-Mesh::Mesh(const std::vector<unsigned int>& indices, const std::initializer_list<SizeDataPair>& dataPairs)
-        : m_count(indices.size()), m_numBuffers(dataPairs.size() + 1) {
-    glGenVertexArrays(1, &m_VAO);
-    glBindVertexArray(m_VAO);
-    m_buffers = new unsigned int[m_numBuffers];
-    glGenBuffers(dataPairs.size() + 1, m_buffers);
-    for (int i = 0; i < dataPairs.size(); i++) {
-        glBindBuffer(GL_ARRAY_BUFFER, m_buffers[i]);
-        glBufferData(GL_ARRAY_BUFFER, dataPairs.begin()[i].second.size() * sizeof(float), dataPairs.begin()[i].second.data(), GL_STATIC_DRAW);
-        glVertexAttribPointer(i, dataPairs.begin()[i].first, GL_FLOAT, false, 0, 0);
-        glEnableVertexAttribArray(i);
-    }
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_buffers[dataPairs.size()]);
+    unsigned int buffer;
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, attributes.size() * sizeof(float), attributes.data(), GL_STATIC_DRAW);
+    m_Buffers.push_back(buffer);
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+    m_Buffers.push_back(buffer);
+    attributeBuilder.build();
+}
+
+Mesh::Mesh(const std::vector<SizeDataPair>& attributes, const std::vector<unsigned int>& indices)
+        : m_count(indices.size()) {
+    glGenVertexArrays(1, &m_VAO);
+    glBindVertexArray(m_VAO);
+    unsigned int buffer;
+    for (int i = 0; i < attributes.size(); i++) {
+        auto [size, data] = attributes.at(i);
+        glGenBuffers(1, &buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+        glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), GL_STATIC_DRAW);
+        glVertexAttribPointer(i, size, GL_FLOAT, false, 0, 0);
+        glEnableVertexAttribArray(i);
+        m_Buffers.push_back(buffer);
+    }
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+    m_Buffers.push_back(buffer);
 }
 
 Mesh::~Mesh() {
-    glDeleteBuffers(m_numBuffers, m_buffers);
+    glDeleteBuffers(m_Buffers.size(), m_Buffers.data());
     glDeleteVertexArrays(1, &m_VAO);
-    delete[] m_buffers;
+    m_Buffers.clear();
 }
 
 void Mesh::draw() const {
