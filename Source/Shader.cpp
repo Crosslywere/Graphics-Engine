@@ -4,6 +4,7 @@
 #include <sstream>
 #include <fstream>
 #include <glm/gtc/type_ptr.hpp>
+#include <utils.h>
 
 #define INFO_LOG_MAX_BUFFER 1024
 
@@ -28,9 +29,21 @@ unsigned int compileShaderSource(const std::string& sourceStr, int type) {
 
 unsigned int compileShaderFile(const std::string& filepath, int type) {
     std::stringstream ss;
-    std::ifstream file(ROOT_DIR + filepath);
+    std::ifstream file(asAbsolutePath(filepath));
     ss << file.rdbuf();
     return compileShaderSource(ss.str(), type);
+}
+
+unsigned int compileShaderSPIRV(const std::string& filepath, int type) {
+    std::stringstream ss;
+    std::ifstream file(asAbsolutePath(filepath));
+    unsigned int shader = glCreateShader(type);
+    const char* sourceBytes = ss.str().c_str();
+    glShaderBinary(1, &shader, GL_SPIR_V_BINARY, sourceBytes, ss.str().length());
+
+    glCompileShader(shader);
+    validateShaderCompilation(shader);
+    return shader;
 }
 
 Shader::Shader(const std::string& vertex, const std::string& fragment, ShaderInputType type) {
@@ -42,10 +55,11 @@ Shader::Shader(const std::string& vertex, const std::string& fragment, ShaderInp
                 break;
             }
         case AS_SPIRV_FILE: {
-                std::cerr << "SPIR-V has not been implemented!" << std::endl;
-                exit(EXIT_FAILURE);
+                vs = compileShaderSPIRV(vertex, GL_VERTEX_SHADER);
+                fs = compileShaderSPIRV(fragment, GL_FRAGMENT_SHADER);
                 break;
             }
+        case AS_INLINE:
         default:
             vs = compileShaderSource(vertex, GL_VERTEX_SHADER);
             fs = compileShaderSource(fragment, GL_FRAGMENT_SHADER);
