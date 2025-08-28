@@ -13,7 +13,7 @@ const glm::mat4 Camera::getProjection(float width, float height) const {
 }
 
 const glm::mat4 Camera::getView() const {
-    return glm::lookAt(m_position, m_position - m_front, WORLD_UP);
+    return glm::lookAt(m_position, m_position + m_front, WORLD_UP);
 }
 
 const glm::vec3& Camera::getWorldUp() {
