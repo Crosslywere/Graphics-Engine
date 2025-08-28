@@ -11,10 +11,10 @@ void processEvents(const Input& input, const Timer& timer, Window& window, void*
     if (input.isButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
         window.disableMouse();
         auto rg = input.getMousePosition();
-        glClearColor(rg.r / window.getWidth(), rg.g / window.getHeight(), sin(timer.getTotalTime() * M_PI) * .5 + .5, 1);
+        Framebuffer::setClearColor(rg.r / window.getWidth(), rg.g / window.getHeight(), sin(timer.getTotalTime() * M_PI) * .5 + .5);
     } else {
         window.normalMouse();
-        glClearColor(0, 0, 0, 1);
+        Framebuffer::setClearColor(0, 0, 0);
     }
 }
 
@@ -29,8 +29,8 @@ int main() {
         shader.setTexture("uTexture", texture.bind());
         Timer& timer = Timer::getInstance();
         while (window.isOpen()) {
-            processEvents(Input::getInstance(), timer, window, &camera);    
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            processEvents(Input::getInstance(), timer, window, &camera);
+            Framebuffer::clear();
             shader.setMat4("uProjection", camera.getProjection(window.getWidth(), window.getHeight()));
             shader.setMat4("uView", camera.getView());
             shader.setMat4("uModel", glm::rotate(glm::mat4(1.f), timer.getTotalTime(), glm::normalize(glm::vec3(1, 1, -1))));
