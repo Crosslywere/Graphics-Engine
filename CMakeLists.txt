@@ -8,6 +8,7 @@ add_subdirectory(Vendor/glfw)
 add_executable(Graphics_Engine
     Vendor/glad/src/glad.c
     Source/Camera.cpp
+    Source/Framebuffer.cpp
     Source/Input.cpp
     Source/Main.cpp
     Source/Mesh.cpp
