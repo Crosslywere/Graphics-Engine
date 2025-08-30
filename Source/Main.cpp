@@ -1,8 +1,5 @@
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <GraphicsEngine.h>
-#include <iostream>
-#include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 
 void processEvents(const Input& input, const Timer& timer, Window& window, void* other) {
