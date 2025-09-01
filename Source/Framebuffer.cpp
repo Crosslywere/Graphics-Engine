@@ -13,7 +13,7 @@ void Framebuffer::unbind() {
 }
 
 void Framebuffer::clear() {
-    glClear(GL_COLOR_BUFFER_BIT | s_Depth ? GL_DEPTH_BUFFER_BIT : 0 | GL_STENCIL_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | s_Depth ? GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT : 0);
 }
 
 void Framebuffer::setClearColor(float r, float g, float b, float a) {

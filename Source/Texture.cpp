@@ -13,10 +13,10 @@ Texture::Texture(const std::string& filepath, bool flipped, bool pixelated) {
         exit(EXIT_FAILURE);
     }
     glBindTexture(GL_TEXTURE_2D, m_texture);
-    glTextureParameteri(m_texture, GL_TEXTURE_MAG_FILTER, pixelated ? GL_NEAREST : GL_LINEAR);
-    glTextureParameteri(m_texture, GL_TEXTURE_MIN_FILTER, pixelated ? GL_NEAREST : GL_LINEAR);
-    glTextureParameteri(m_texture, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTextureParameteri(m_texture, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, pixelated ? GL_NEAREST : GL_LINEAR);
+    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, pixelated ? GL_NEAREST : GL_LINEAR);
+    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     int format;
     switch (ch) {
         case 1:
@@ -34,7 +34,7 @@ Texture::Texture(const std::string& filepath, bool flipped, bool pixelated) {
     glTexImage2D(GL_TEXTURE_2D, 0, format, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
-    unbind();
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Texture::~Texture() {
