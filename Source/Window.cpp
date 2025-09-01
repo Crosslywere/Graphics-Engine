@@ -3,6 +3,7 @@
 #include <iostream>
 #include <Input.h>
 #include <Timer.h>
+#include <Framebuffer.h>
 
 Window::Window(int width, int height, const std::string& title, bool resizable, bool vsync)
     : m_width(width), m_height(height), m_title(title), m_resizable(resizable), m_vsync(vsync) {
@@ -25,7 +26,6 @@ Window::Window(int width, int height, const std::string& title, bool resizable, 
         exit(EXIT_FAILURE);
     }
     glfwSwapInterval(m_vsync);
-    glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBlendEquation(GL_FUNC_ADD);
@@ -46,9 +46,11 @@ Window::Window(int width, int height, const std::string& title, bool resizable, 
     glfwSetCursorPosCallback(m_handle, [](GLFWwindow* window, double xpos, double ypos) {
         Input::getInstance().setMousePos(xpos, ypos);
     });
+    Framebuffer::init();
 }
 
 Window::~Window() {
+    Framebuffer::deinit();
     glfwDestroyWindow(m_handle);
     glfwTerminate();
 }
@@ -69,8 +71,7 @@ int Window::getHeight() const {
     return m_height;
 }
 
-const std::string &Window::getTitle() const
-{
+const std::string &Window::getTitle() const {
     return m_title;
 }
 
