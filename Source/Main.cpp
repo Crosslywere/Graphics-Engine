@@ -12,7 +12,7 @@ int main() {
     // Scoped for cleanup - once the window context is destroyed, opengl calls will fail!
     {
         Camera camera = Camera(glm::vec3(0, 0, -3));
-        Model model = Model("Resource/models/cube.gltf");
+        Model model = Model("Resource/models/cube.glb");
         Texture texture = Texture("Resource/textures/wall.jpg");
         Shader shader = Shader("Resource/shaders/3d_vert.glsl", "Resource/shaders/3d_frag.glsl", AS_FILE);
         Timer& timer = Timer::getInstance();
