@@ -18,6 +18,5 @@ private:
     static void init();
     static void deinit();
     unsigned int m_Framebuffer;
-    unsigned int m_Texture;
-    unsigned int m_Renderbuffer;
+    std::vector<unsigned int> m_Textures;
 };

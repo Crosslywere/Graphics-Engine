@@ -30,28 +30,32 @@ Framebuffer::Framebuffer(int width, int height) {
     glGenFramebuffers(1, &m_Framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, m_Framebuffer);
     
-    glGenTextures(1, &m_Texture);
-    glBindTexture(GL_TEXTURE_2D, m_Texture);
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_Texture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    m_Textures.push_back(texture);
 
-    glGenRenderbuffers(1, &m_Renderbuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, m_Renderbuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_Renderbuffer);
-    
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture, 0);
+    m_Textures.push_back(texture);
+
     assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE && "Framebuffer is incomplete!");
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 Framebuffer::~Framebuffer() {
-    glDeleteRenderbuffers(1, &m_Renderbuffer);
-    glDeleteTextures(1, &m_Texture);
+    glDeleteTextures(m_Textures.size(), m_Textures.data());
     glDeleteFramebuffers(1, &m_Framebuffer);
 }
 
@@ -61,10 +65,10 @@ void Framebuffer::bind() const {
 
 void Framebuffer::drawToScreen() const {
     unbind();
-    enableDepthTest(false);
+    clear();
     s_Shader->use();
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_Texture);
+    glBindTexture(GL_TEXTURE_2D, m_Textures[0]);
     s_Mesh->draw();
 }
 
