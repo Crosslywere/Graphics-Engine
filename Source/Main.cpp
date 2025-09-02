@@ -67,7 +67,7 @@ int main() {
                 Framebuffer::clear();
                 shader.use();
                 shader.setTexture("uTexture", texture.bind());
-                shader.setMat4("uProjection", camera.getProjection(window.getWidth(), window.getHeight()));
+                shader.setMat4("uProjection", camera.getProjection((float) window.getWidth() / window.getHeight()));
                 shader.setMat4("uView", camera.getView());
                 shader.setMat4("uModel", glm::rotate(glm::mat4(1.f), timer.getTotalTime(), glm::normalize(glm::vec3(1, 1, -1))));
                 model.draw(shader);

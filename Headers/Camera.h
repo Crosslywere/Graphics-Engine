@@ -6,6 +6,7 @@ class Camera {
     friend void updateVectors(Camera&);
 public:
     Camera(const glm::vec3& position = glm::vec3(0, 1, -1), float pitch = 0, float yaw = 90, float fov = 60);
+    const glm::mat4 getProjection(float aspectRatio) const;
     const glm::mat4 getProjection(float width, float height) const;
     const glm::mat4 getView() const;
     static const glm::vec3& getWorldUp();

@@ -8,8 +8,12 @@ Camera::Camera(const glm::vec3& position, float pitch, float yaw, float fov)
     updateVectors(*this);
 }
 
+const glm::mat4 Camera::getProjection(float aspectRatio) const {
+    return glm::perspective(glm::radians(m_fovy), aspectRatio, 0.1f, 100.f);
+}
+
 const glm::mat4 Camera::getProjection(float width, float height) const {
-    return glm::perspective(glm::radians(m_fovy), width / height, 0.1f, 100.f);
+    return glm::ortho(-width / 2, width / 2, -height / 2, height / 2, 0.1f, 100.f);
 }
 
 const glm::mat4 Camera::getView() const {
