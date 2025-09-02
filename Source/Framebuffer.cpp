@@ -26,6 +26,11 @@ void Framebuffer::enableDepthTest(bool enable) {
     s_Depth = enable;
 }
 
+void Framebuffer::enableCullFace(bool enable) {
+    if (enable) glEnable(GL_CULL_FACE);
+    else glDisable(GL_CULL_FACE);
+}
+
 Framebuffer::Framebuffer(int width, int height) {
     glGenFramebuffers(1, &m_Framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, m_Framebuffer);

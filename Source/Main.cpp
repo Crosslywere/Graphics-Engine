@@ -59,6 +59,7 @@ int main() {
         Timer& timer = Timer::getInstance();
         Framebuffer framebuffer = Framebuffer(window.getWidth(), window.getHeight());
         Framebuffer::enableDepthTest();
+        Framebuffer::enableCullFace();
         Framebuffer::setClearColor(.5, .5, .5);
         while (window.isOpen()) {
             processEvents(window, camera);
@@ -69,7 +70,7 @@ int main() {
                 shader.setTexture("uTexture", texture.bind());
                 shader.setMat4("uProjection", camera.getProjection((float) window.getWidth() / window.getHeight()));
                 shader.setMat4("uView", camera.getView());
-                shader.setMat4("uModel", glm::rotate(glm::mat4(1.f), timer.getTotalTime(), glm::normalize(glm::vec3(1, 1, -1))));
+                shader.setMat4("uModel", glm::rotate(glm::mat4(1.f), timer.getTotalTime(), glm::vec3(1, 1, -1)));
                 model.draw(shader);
             }
             framebuffer.drawToScreen();
