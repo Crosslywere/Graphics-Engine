@@ -9,9 +9,11 @@ uniform mat4 uModel;
 
 varying vec2 vTexCoord;
 varying vec3 vNormal;
+varying vec3 vFragPos;
 
 void main() {
-    vNormal = normalize(aNormal);
+    vNormal = mat3(transpose(inverse(uModel))) * normalize(aNormal);
     vTexCoord = aTexCoord;
+    vFragPos = vec3(uModel * vec4(aPosition, 1.0));
     gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
 }

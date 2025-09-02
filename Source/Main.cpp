@@ -53,29 +53,39 @@ int main() {
     // Scoped for cleanup - once the window context is destroyed, opengl calls will fail!
     {
         Camera camera = Camera(glm::vec3(0, 0, -3));
-        Model model = Model("Resource/models/cube.glb");
+        Model cube = Model("Resource/models/cube.glb");
         Model plane = Model("Resource/models/plane.glb");
         Texture wall = Texture("Resource/textures/wall.jpg");
         Texture container = Texture("Resource/textures/container.png");
-        Shader shader = Shader("Resource/shaders/3d_vert.glsl", "Resource/shaders/3d_frag.glsl", AS_FILE);
+        Texture containerSpecular = Texture("Resource/textures/container_specular.png");
+        Shader modelShader = Shader("Resource/shaders/3d_vert.glsl", "Resource/shaders/3d_frag.glsl", AS_FILE);
+        Shader lightShader = Shader("Resource/shaders/3d_vert.glsl", "Resource/shaders/flat_frag.glsl", AS_FILE);
         Timer& timer = Timer::getInstance();
         Framebuffer framebuffer = Framebuffer(window.getWidth(), window.getHeight());
         Framebuffer::enableDepthTest();
         Framebuffer::enableCullFace();
+        glm::vec3 lightPos = glm::vec3(0, 3, 0);
         while (window.isOpen()) {
             processEvents(window, camera);
             framebuffer.bind();
             {
                 Framebuffer::clear();
-                shader.use();
-                shader.setTexture("uTexture", container);
-                shader.setMat4("uProjection", camera.getProjection((float) window.getWidth() / window.getHeight()));
-                shader.setMat4("uView", camera.getView());
-                shader.setMat4("uModel", glm::rotate(glm::mat4(1.f), timer.getTotalTime(), glm::vec3(1, 1, -1)));
-                model.draw(shader);
-                shader.setTexture("uTexture", wall);
-                shader.setMat4("uModel", glm::translate(glm::mat4(1.f), glm::vec3(0, -.85f, 0)));
-                plane.draw(shader);
+                modelShader.use();
+                modelShader.setTexture("uTexture", container);
+                modelShader.setMat4("uProjection", camera.getProjection((float) window.getWidth() / window.getHeight()));
+                modelShader.setMat4("uView", camera.getView());
+                modelShader.setMat4("uModel", glm::rotate(glm::mat4(1.f), timer.getTotalTime(), glm::vec3(1, 1, -1)));
+                modelShader.setFloat3("uLightPos", lightPos);
+                cube.draw(modelShader);
+                modelShader.setTexture("uTexture", wall);
+                modelShader.setMat4("uModel", glm::translate(glm::mat4(1.f), glm::vec3(0, -.85f, 0)));
+                plane.draw(modelShader);
+                lightShader.use();
+                lightShader.setMat4("uProjection", camera.getProjection((float) window.getWidth() / window.getHeight()));
+                lightShader.setMat4("uView", camera.getView());
+                lightShader.setMat4("uModel", glm::scale(glm::translate(glm::mat4(1.f), lightPos), glm::vec3(.2f)));
+                lightShader.setFloat3("uColor", 1, 1, 1);
+                cube.draw(lightShader);
             }
             framebuffer.drawToScreen();
         }
