@@ -15,6 +15,8 @@ public:
     ~Framebuffer();
     void bind() const;
     void drawToScreen() const;
+    unsigned int bindColorTexture(unsigned int index = 0) const;
+    unsigned int bindDepthTexture(unsigned int index = 1) const;
 private:
     static void init();
     static void deinit();

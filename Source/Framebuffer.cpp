@@ -72,9 +72,20 @@ void Framebuffer::drawToScreen() const {
     unbind();
     clear();
     s_Shader->use();
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_Textures[0]);
+    s_Shader->setInt("uTexture", bindColorTexture());
     s_Mesh->draw();
+}
+
+unsigned int Framebuffer::bindColorTexture(unsigned int index) const {
+    glActiveTexture(GL_TEXTURE0 + index);
+    glBindTexture(GL_TEXTURE_2D, m_Textures[0]);
+    return index;
+}
+
+unsigned int Framebuffer::bindDepthTexture(unsigned int index) const {
+    glActiveTexture(GL_TEXTURE0 + index);
+    glBindTexture(GL_TEXTURE_2D, m_Textures[1]);
+    return index;
 }
 
 void Framebuffer::init() {
