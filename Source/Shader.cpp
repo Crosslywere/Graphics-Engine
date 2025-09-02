@@ -86,6 +86,10 @@ void Shader::setFloat3(const std::string& uniform, float x, float y, float z) {
     glUniform3f(getUniformLocation(uniform), x, y, z);
 }
 
+void Shader::setFloat3(const std::string& uniform, const glm::vec3& vector) {
+    glUniform3fv(getUniformLocation(uniform), 1, glm::value_ptr(vector));
+}
+
 void Shader::setTexture(const std::string& uniform, const Texture& texture, unsigned int index) {
     setInt(uniform, texture.bind(index));
 }

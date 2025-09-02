@@ -18,6 +18,7 @@ public:
     void use() const;
     void setInt(const std::string& uniform, int value);
     void setFloat3(const std::string& uniform, float x, float y, float z);
+    void setFloat3(const std::string& uniform, const glm::vec3& vector);
     void setTexture(const std::string& uniform, const Texture& texture, unsigned int index = 0);
     void setMat4(const std::string& uniform, const glm::mat4& mat);
 private:
