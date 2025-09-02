@@ -78,12 +78,16 @@ void Shader::use() const {
     glUseProgram(m_program);
 }
 
+void Shader::setInt(const std::string &uniform, int value) {
+    glUniform1i(getUniformLocation(uniform), value);
+}
+
 void Shader::setFloat3(const std::string& uniform, float x, float y, float z) {
     glUniform3f(getUniformLocation(uniform), x, y, z);
 }
 
-void Shader::setTexture(const std::string& uniform, unsigned int index) {
-    glUniform1i(getUniformLocation(uniform), index);
+void Shader::setTexture(const std::string& uniform, const Texture& texture, unsigned int index) {
+    setInt(uniform, texture.bind(index));
 }
 
 void Shader::setMat4(const std::string &uniform, const glm::mat4 &mat) {

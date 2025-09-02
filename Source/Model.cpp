@@ -14,10 +14,10 @@ void Model::MeshTexture::draw(Shader &shader) const {
         auto [type, texture] = m_Textures.at(i);
         switch (type) {
         case aiTextureType_DIFFUSE:
-            shader.setTexture((s_MaterialName.empty() ? "" : s_MaterialName + ".") + s_DiffuseName + std::to_string(diffuseNr++), texture.bind(i));
+            shader.setTexture((s_MaterialName.empty() ? "" : s_MaterialName + ".") + s_DiffuseName + std::to_string(diffuseNr++), texture, i);
             break;
         case aiTextureType_SPECULAR:
-            shader.setTexture((s_MaterialName.empty() ? "" : s_MaterialName + ".") + s_SpecularName + std::to_string(specularNr++), texture.bind(i));
+            shader.setTexture((s_MaterialName.empty() ? "" : s_MaterialName + ".") + s_SpecularName + std::to_string(specularNr++), texture, i);
             break;
         }
     }

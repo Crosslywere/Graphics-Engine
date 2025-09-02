@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <string>
 #include <glm/glm.hpp>
+#include <Texture.h>
 
 enum ShaderInputType {
     AS_INLINE = 0,
@@ -15,8 +16,9 @@ public:
     Shader(const std::string& vertex, const std::string& fragment, ShaderInputType type =  AS_INLINE);
     ~Shader();
     void use() const;
+    void setInt(const std::string& uniform, int value);
     void setFloat3(const std::string& uniform, float x, float y, float z);
-    void setTexture(const std::string& uniform, unsigned int index);
+    void setTexture(const std::string& uniform, const Texture& texture, unsigned int index = 0);
     void setMat4(const std::string& uniform, const glm::mat4& mat);
 private:
     int getUniformLocation(const std::string& name);
