@@ -6,6 +6,5 @@ varying vec3 vNormal;
 uniform sampler2D uTexture;
 
 void main() {
-    vec3 t = texture2D(uTexture, vTexCoord).rgb;
-    oFragColor = vec4(abs(vNormal) * t, 1.0);
+    oFragColor = texture2D(uTexture, vTexCoord);
 }
