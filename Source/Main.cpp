@@ -54,13 +54,13 @@ int main() {
     {
         Camera camera = Camera(glm::vec3(0, 0, -3));
         Model model = Model("Resource/models/cube.glb");
+        Model plane = Model("Resource/models/plane.glb");
         Texture texture = Texture("Resource/textures/wall.jpg");
         Shader shader = Shader("Resource/shaders/3d_vert.glsl", "Resource/shaders/3d_frag.glsl", AS_FILE);
         Timer& timer = Timer::getInstance();
         Framebuffer framebuffer = Framebuffer(window.getWidth(), window.getHeight());
         Framebuffer::enableDepthTest();
         Framebuffer::enableCullFace();
-        Framebuffer::setClearColor(.5, .5, .5);
         while (window.isOpen()) {
             processEvents(window, camera);
             framebuffer.bind();
@@ -72,6 +72,8 @@ int main() {
                 shader.setMat4("uView", camera.getView());
                 shader.setMat4("uModel", glm::rotate(glm::mat4(1.f), timer.getTotalTime(), glm::vec3(1, 1, -1)));
                 model.draw(shader);
+                shader.setMat4("uModel", glm::translate(glm::mat4(1.f), glm::vec3(0, -.85f, 0)));
+                plane.draw(shader);
             }
             framebuffer.drawToScreen();
         }
