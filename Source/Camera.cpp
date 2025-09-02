@@ -9,11 +9,11 @@ Camera::Camera(const glm::vec3& position, float pitch, float yaw, float fov)
 }
 
 const glm::mat4 Camera::getProjection(float aspectRatio) const {
-    return glm::perspective(glm::radians(m_fovy), aspectRatio, 0.1f, 100.f);
+    return glm::perspective(glm::radians(m_fovy), aspectRatio, m_near, m_far);
 }
 
 const glm::mat4 Camera::getProjection(float width, float height) const {
-    return glm::ortho(-width / 2, width / 2, -height / 2, height / 2, 0.1f, 100.f);
+    return glm::ortho(-width / 2, width / 2, -height / 2, height / 2, m_near, m_far);
 }
 
 const glm::mat4 Camera::getView() const {
@@ -56,6 +56,14 @@ float Camera::getFovY() const {
 
 void Camera::setFovY(float fovy) {
     m_fovy = fovy;
+}
+
+void Camera::setNearDistance(float near) {
+    m_near = near;
+}
+
+void Camera::setFarDistance(float far) {
+    m_far = far;
 }
 
 const glm::vec3& Camera::getFront() const {

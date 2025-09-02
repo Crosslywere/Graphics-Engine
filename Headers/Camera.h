@@ -18,11 +18,13 @@ public:
     void setYaw(float yaw);
     float getFovY() const;
     void setFovY(float fovy);
+    void setNearDistance(float near);
+    void setFarDistance(float far);
     const glm::vec3& getFront() const;
     const glm::vec3& getRight() const;
     const glm::vec3& getUp() const;
 private:
     static const glm::vec3 WORLD_UP;
     glm::vec3 m_position, m_front, m_right, m_up;
-    float m_pitch, m_yaw, m_fovy;
+    float m_pitch, m_yaw, m_fovy, m_near{.15}, m_far{100};
 };
