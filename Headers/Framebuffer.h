@@ -10,6 +10,7 @@ public:
     static void setClearColor(float r, float g, float b, float a = 1);
     static void enableDepthTest(bool enable = true);
     static void enableCullFace(bool enable = true);
+    static void cullBackFaces(bool face = true);
 public:
     Framebuffer(int width, int height);
     ~Framebuffer();
