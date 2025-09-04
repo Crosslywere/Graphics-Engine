@@ -18,9 +18,12 @@ public:
     void drawToScreen() const;
     unsigned int bindColorTexture(unsigned int index = 0) const;
     unsigned int bindDepthTexture(unsigned int index = 1) const;
+    int getWidth() const;
+    int getHeight() const;
 private:
     static void init();
     static void deinit();
     unsigned int m_Framebuffer;
     std::vector<unsigned int> m_Textures;
+    int m_Width, m_Height;
 };

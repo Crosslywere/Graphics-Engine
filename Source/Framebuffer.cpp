@@ -36,7 +36,8 @@ void Framebuffer::cullBackFaces(bool face) {
     else glCullFace(GL_FRONT);
 }
 
-Framebuffer::Framebuffer(int width, int height) {
+Framebuffer::Framebuffer(int width, int height)
+    : m_Width(width), m_Height(height) {
     glGenFramebuffers(1, &m_Framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, m_Framebuffer);
     
@@ -91,6 +92,14 @@ unsigned int Framebuffer::bindDepthTexture(unsigned int index) const {
     glActiveTexture(GL_TEXTURE0 + index);
     glBindTexture(GL_TEXTURE_2D, m_Textures[1]);
     return index;
+}
+
+int Framebuffer::getWidth() const {
+    return m_Width;
+}
+
+int Framebuffer::getHeight() const {
+    return m_Height;
 }
 
 void Framebuffer::init() {
