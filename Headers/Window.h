@@ -18,6 +18,9 @@ public:
 
     void disableMouse();
     void normalMouse();
+
+    void setViewport(int width, int height);
+    void resetViewport();
 private:
     int m_width, m_height;
     bool m_vsync, m_resizable;

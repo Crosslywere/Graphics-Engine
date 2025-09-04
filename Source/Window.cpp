@@ -98,3 +98,12 @@ void Window::disableMouse() {
 void Window::normalMouse() {
     glfwSetInputMode(m_handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
+
+void Window::setViewport(int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
+void Window::resetViewport()
+{
+    glViewport(0, 0, m_width, m_height);
+}
