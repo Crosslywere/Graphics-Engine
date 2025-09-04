@@ -40,7 +40,7 @@ void processEvents(Window& window, Camera& camera) {
         float xoffset = mousePos.x - lastPos.x;
         float yoffset = lastPos.y - mousePos.y;
         lastPos = mousePos;
-        camera.setPitch(camera.getPitch() + yoffset * 10 * timer.getDeltaTime());
+        camera.setPitch(glm::clamp(camera.getPitch() + yoffset * 10 * timer.getDeltaTime(), -89.9f, 89.9f));
         camera.setYaw(camera.getYaw() + xoffset * 10 * timer.getDeltaTime());
     } else {
         lastPos = input.getMousePosition();

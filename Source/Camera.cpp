@@ -37,7 +37,7 @@ float Camera::getPitch() const {
 }
 
 void Camera::setPitch(float pitch) {
-    m_pitch = glm::clamp(pitch, -89.9f, 89.9f);
+    m_pitch = pitch;
     updateVectors(*this);
 }
 
