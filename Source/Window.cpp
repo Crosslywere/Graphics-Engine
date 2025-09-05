@@ -11,6 +11,9 @@ Window::Window(int width, int height, const std::string& title, bool resizable, 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+#endif
     glfwWindowHint(GLFW_RESIZABLE, m_resizable);
     m_handle = glfwCreateWindow(m_width, m_height, m_title.c_str(), NULL, NULL);
     if (!m_handle) {
@@ -103,7 +106,6 @@ void Window::setViewport(int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-void Window::resetViewport()
-{
+void Window::resetViewport() {
     glViewport(0, 0, m_width, m_height);
 }
