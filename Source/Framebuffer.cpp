@@ -31,9 +31,12 @@ void Framebuffer::enableCullFace(bool enable) {
     else glDisable(GL_CULL_FACE);
 }
 
-void Framebuffer::cullBackFaces(bool face) {
-    if (face) glCullFace(GL_BACK);
-    else glCullFace(GL_FRONT);
+void Framebuffer::cullBackFaces() {
+    glCullFace(GL_BACK);
+}
+
+void Framebuffer::cullFrontFaces() {
+    glCullFace(GL_FRONT);
 }
 
 Framebuffer::Framebuffer(int width, int height)
